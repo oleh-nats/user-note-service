@@ -22,6 +22,5 @@ impl Actor for DbActor {
 
 pub fn get_pool(db_url: &str) -> anyhow::Result<Pool<ConnectionManager<PgConnection>>> {
     let manager: ConnectionManager<PgConnection> = ConnectionManager::<PgConnection>::new(db_url);
-    Ok(Pool::builder()
-        .build(manager)?)
+    Ok(Pool::builder().build(manager)?)
 }

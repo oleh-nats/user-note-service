@@ -19,6 +19,7 @@ jwt = "0.16.0"
 sha2 = "0.10.6"
 argonautica = "0.2.0"
 anyhow = "1.0.72"
+thiserror = "1.0.44"
 
 tokio = { version = "1.26.0", features = ["full"] }
 hyper = "0.14.25"

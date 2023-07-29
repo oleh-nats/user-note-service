@@ -11,17 +11,22 @@ use diesel::{
 use dotenv::dotenv;
 use std::env;
 
+mod db;
+mod error;
+mod login;
+mod note;
+mod validator;
 
 use db::utils::{get_pool, AppState, DbActor};
 use login::services::{basic_auth, create_user};
 use note::services::{create_note, delete_note, fetch_notes, update_note};
-use validator::validator::handle_validate;
+use validator::validator_utils::handle_validate;
 
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
+async fn main() -> anyhow::Result<()> {
     dotenv().ok();
     let db_url: String = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool: Pool<ConnectionManager<PgConnection>> = get_pool(&db_url);
+    let pool: Pool<ConnectionManager<PgConnection>> = get_pool(&db_url)?;
     let db_addr = SyncArbiter::start(5, move || DbActor(pool.clone()));
 
     HttpServer::new(move || {
@@ -34,7 +39,7 @@ async fn main() -> std::io::Result<()> {
             .service(basic_auth)
             .service(
                 web::scope("")
-                    .wrap(bearer_middleware.clone())
+                    .wrap(bearer_middleware)
                     .service(create_note)
                     .service(fetch_notes)
                     .service(update_note)
@@ -43,5 +48,7 @@ async fn main() -> std::io::Result<()> {
     })
     .bind(("127.0.0.1", 8080))?
     .run()
-    .await
+    .await?;
+
+    Ok(())
 }

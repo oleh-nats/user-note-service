@@ -1,6 +1,23 @@
 use actix::MailboxError;
 use actix_web::{http::header::ToStrError, HttpResponse, ResponseError};
-use backtrace::Backtrace;
+use argonautica::Error as ArgonauticaError;
+
+#[derive(Debug)]
+pub struct ArgonauticaErrorWrapper(argonautica::Error);
+
+impl std::fmt::Display for ArgonauticaErrorWrapper {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+impl std::error::Error for ArgonauticaErrorWrapper {}
+
+impl From<ArgonauticaError> for AppErrors {
+    fn from(err: ArgonauticaError) -> Self {
+        AppErrors::ArgonauticaError(ArgonauticaErrorWrapper(err))
+    }
+}
 
 #[allow(clippy::enum_variant_names)]
 #[derive(thiserror::Error, Debug)]
@@ -15,13 +32,16 @@ pub enum AppErrors {
     ToStrError(#[from] ToStrError),
 
     #[error(transparent)]
-    FromHexError(#[from] rustc_hex::FromHexError),
+    DigestInvalidLength(#[from] hmac::digest::InvalidLength),
 
     #[error(transparent)]
-    RequestError(#[from] reqwest::Error),
+    EnvVarError(#[from] std::env::VarError),
 
     #[error(transparent)]
-    UrlParseError(#[from] url::ParseError),
+    JwtError(#[from] jwt::Error),
+
+    #[error(transparent)]
+    ArgonauticaError(#[from] ArgonauticaErrorWrapper),
 }
 
 #[derive(serde::Serialize)]
@@ -31,8 +51,6 @@ pub struct ErrorResponse {
 
 impl ResponseError for AppErrors {
     fn error_response(&self) -> HttpResponse {
-        println!("Call stack:\n{:?}", Backtrace::new());
-
         HttpResponse::InternalServerError().json(ErrorResponse {
             message: self.to_string(),
         })
