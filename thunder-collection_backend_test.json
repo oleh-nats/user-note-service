@@ -1,0 +1,131 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "backend_test",
+    "dateExported": "2023-03-19T17:33:23.280Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "5bca80cf-7c08-4770-a888-9b9f9ad19940",
+            "colId": "962578a5-6980-4f50-a263-6992009d4e17",
+            "containerId": "",
+            "name": "delete note",
+            "url": "http://localhost:8080/api/notes/1",
+            "method": "DELETE",
+            "sortNum": 10000,
+            "created": "2023-03-19T17:31:21.687Z",
+            "modified": "2023-03-19T17:31:21.687Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.17itMtCzPavgIPt0OaPMPEZJiwASqDUppyY5u76GZEE"
+            },
+            "tests": []
+        },
+        {
+            "_id": "d16e7134-fe5c-49bc-ac04-f610c5ef2f49",
+            "colId": "962578a5-6980-4f50-a263-6992009d4e17",
+            "containerId": "",
+            "name": "get notes",
+            "url": "http://localhost:8080/api/notes",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-03-19T17:31:38.846Z",
+            "modified": "2023-03-19T17:31:38.846Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.17itMtCzPavgIPt0OaPMPEZJiwASqDUppyY5u76GZEE"
+            },
+            "tests": []
+        },
+        {
+            "_id": "dc27e7c7-34f3-453a-af77-455107cf6a00",
+            "colId": "962578a5-6980-4f50-a263-6992009d4e17",
+            "containerId": "",
+            "name": "new note",
+            "url": "http://localhost:8080/api/notes",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-03-19T17:31:50.716Z",
+            "modified": "2023-03-19T17:31:50.716Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"new title12werwf\",\n  \"content\": \"new content12wefwfwefewf\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.17itMtCzPavgIPt0OaPMPEZJiwASqDUppyY5u76GZEE"
+            },
+            "tests": []
+        },
+        {
+            "_id": "8d50d8bd-29f4-4046-abd2-ef371897cf6d",
+            "colId": "962578a5-6980-4f50-a263-6992009d4e17",
+            "containerId": "",
+            "name": "update note",
+            "url": "http://localhost:8080/api/notes/1",
+            "method": "PUT",
+            "sortNum": 40000,
+            "created": "2023-03-19T17:32:05.582Z",
+            "modified": "2023-03-19T17:32:05.582Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"new title12345678\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.17itMtCzPavgIPt0OaPMPEZJiwASqDUppyY5u76GZEE"
+            },
+            "tests": []
+        },
+        {
+            "_id": "9544a304-ad88-4803-a5d4-f1386048bafb",
+            "colId": "962578a5-6980-4f50-a263-6992009d4e17",
+            "containerId": "",
+            "name": "login",
+            "url": "http://localhost:8080/api/login",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2023-03-19T17:32:11.406Z",
+            "modified": "2023-03-19T17:32:11.406Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "basic",
+                "basic": {
+                    "username": "qwerty",
+                    "password": "1234"
+                }
+            },
+            "tests": []
+        },
+        {
+            "_id": "65599ba8-a47f-46cb-af80-c114971f49e3",
+            "colId": "962578a5-6980-4f50-a263-6992009d4e17",
+            "containerId": "",
+            "name": "register",
+            "url": "http://localhost:8080/api/register",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2023-03-19T17:32:17.637Z",
+            "modified": "2023-03-19T17:32:17.637Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\": \"qwerty1\",\n  \"password\": \"1234\"\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}
