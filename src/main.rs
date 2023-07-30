@@ -37,6 +37,7 @@ async fn main() -> anyhow::Result<()> {
             .app_data(Data::new(AppState {
                 db: db_addr.clone(),
                 hash_secret: properties.hash_secret.to_owned(),
+                jwt_secret: properties.jwt_secret.to_owned(),
             }))
             .configure(routes::auth_config)
             .service(

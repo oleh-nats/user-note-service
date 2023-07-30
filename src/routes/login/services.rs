@@ -51,9 +51,7 @@ pub(crate) async fn basic_auth(
     credentials: BasicAuth,
 ) -> AppResult<HttpResponse> {
     let jwt_secret: Hmac<Sha256> = Hmac::new_from_slice(
-        std::env::var("JWT_SECRET")
-            .expect("JWT_SECRET must be set!")
-            .as_bytes(),
+        state.jwt_secret.as_bytes(),
     )?;
     let username = credentials.user_id().to_string();
     let password = credentials.password();

@@ -1,0 +1,11 @@
+version: "3.4"
+services:
+  postgres:
+    image: postgres:10.4
+    ports:
+      - '5445:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test12345
+      POSTGRES_DB: user_note_db
+      ALLOW_IP_RANGE: 0.0.0.0/0

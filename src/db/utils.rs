@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 pub struct AppState {
     pub db: Addr<DbActor>,
     pub hash_secret: String,
+    pub jwt_secret: String,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
