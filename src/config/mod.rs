@@ -9,7 +9,7 @@ pub struct CommandLine {
 }
 
 impl CommandLine {
-    pub fn load_configurations<'a>(self) -> anyhow::Result<Config<'a>> {
+    pub fn load_configurations(self) -> anyhow::Result<Config> {
         let config = ConfigBuilder::<DefaultState>::default()
             .add_source(File::from(self.config_path))
             .build()?;
@@ -19,20 +19,20 @@ impl CommandLine {
     }
 }
 
-#[derive(Debug, Clone, Copy, Deserialize)]
-pub struct Config<'a> {
-    pub postgres: Database<'a>,
-    pub web: Web<'a>,
-    pub jwt_secret: &'a str,
-    pub hash_secret: &'a str,
+#[derive(Debug, Clone, Deserialize)]
+pub struct Config {
+    pub postgres: Database,
+    pub web: Web,
+    pub jwt_secret: String,
+    pub hash_secret: String,
 }
 
-#[derive(Debug, Deserialize, Copy, Clone)]
-pub struct Database<'a> {
-    pub database_url: &'a str,
+#[derive(Debug, Deserialize, Clone)]
+pub struct Database {
+    pub database_url: String,
 }
 
-#[derive(Debug, Clone, Copy, Deserialize)]
-pub struct Web<'a> {
-    pub bind: &'a str,
+#[derive(Debug, Clone, Deserialize)]
+pub struct Web {
+    pub bind: String,
 }

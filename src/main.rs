@@ -25,12 +25,13 @@ async fn main() -> anyhow::Result<()> {
     let cmd: CommandLine = CommandLine::parse();
     let properties = cmd.load_configurations()?;
 
-    let pool: Pool<ConnectionManager<PgConnection>> = get_pool(properties.postgres.database_url)?;
+    let pool: Pool<ConnectionManager<PgConnection>> = get_pool(&properties.postgres.database_url)?;
     let db_addr = SyncArbiter::start(5, move || DbActor(pool.clone()));
 
     HttpServer::new(move || {
+        let jwt_secret = properties.jwt_secret.clone();
         let bearer_middleware = HttpAuthentication::bearer(move |req, credentials| {
-            handle_validate(req, credentials, properties.jwt_secret)
+            handle_validate(req, credentials, jwt_secret.clone())
         });
         App::new()
             .app_data(Data::new(AppState {

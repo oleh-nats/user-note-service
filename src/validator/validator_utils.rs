@@ -19,7 +19,7 @@ pub struct TokenClaims {
 pub async fn handle_validate(
     req: ServiceRequest,
     credentials: BearerAuth,
-    jwt_secret: &str,
+    jwt_secret: String,
 ) -> anyhow::Result<ServiceRequest, (Error, ServiceRequest)> {
     let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
     let token_string = credentials.token();
