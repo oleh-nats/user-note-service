@@ -59,11 +59,12 @@ pub(crate) async fn basic_auth(
     match password {
         None => Ok(HttpResponse::Unauthorized().json("Must provide password")),
         Some(pass) => {
-            let db: Addr<DbActor> = state.as_ref().db.clone();
+            let state = state.as_ref();
+            let db: Addr<DbActor> = state.db.clone();
 
             let user = db.send(GetUser { username }).await??;
 
-            let hash_secret = std::env::var("HASH_SECRET")?;
+            let hash_secret = state.hash_secret.clone();
 
             let mut verifier = Verifier::default();
             let is_valid = verifier
