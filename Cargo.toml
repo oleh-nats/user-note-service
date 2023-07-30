@@ -11,7 +11,6 @@ actix-web = "4.2.1"
 actix-web-httpauth = "0.8.0"
 chrono = { version = "0.4", features = ["serde"] }
 diesel = { version = "2.0.2", features = ["postgres", "r2d2", "chrono"] }
-dotenv = "0.15.0"
 serde = { version = "1.0.145", features = ["derive"] }
 serde_json = "1.0.86"
 hmac = "0.12.1"
@@ -20,6 +19,8 @@ sha2 = "0.10.6"
 argonautica = "0.2.0"
 anyhow = "1.0.72"
 thiserror = "1.0.44"
+clap = { version = "4.1.8", features = ["derive", "env"] }
+config = "0.13.3"
 
 tokio = { version = "1.26.0", features = ["full"] }
 hyper = "0.14.25"

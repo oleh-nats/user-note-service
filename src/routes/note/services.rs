@@ -5,7 +5,6 @@ use crate::{
 };
 use actix::Addr;
 use actix_web::{
-    delete, get, post, put,
     web::{Data, Json, Path},
     HttpResponse,
 };
@@ -24,8 +23,7 @@ pub struct UpdateArticleBody {
     pub content: Option<String>,
 }
 
-#[post("/api/notes")]
-pub async fn create_note(
+pub(crate) async fn create_note(
     state: Data<AppState>,
     body: Json<CreateArticleBody>,
 ) -> AppResult<HttpResponse> {
@@ -42,8 +40,7 @@ pub async fn create_note(
     Ok(HttpResponse::Ok().json(res))
 }
 
-#[get("/api/notes")]
-pub async fn fetch_notes(state: Data<AppState>) -> AppResult<HttpResponse> {
+pub(crate) async fn fetch_notes(state: Data<AppState>) -> AppResult<HttpResponse> {
     let db: Addr<DbActor> = state.as_ref().db.clone();
 
     let res = db.send(FetchNotes).await??;
@@ -51,8 +48,7 @@ pub async fn fetch_notes(state: Data<AppState>) -> AppResult<HttpResponse> {
     Ok(HttpResponse::Ok().json(res))
 }
 
-#[put("/api/notes/{id}")]
-pub async fn update_note(
+pub(crate) async fn update_note(
     state: Data<AppState>,
     path: Path<i32>,
     body: Json<UpdateArticleBody>,
@@ -72,8 +68,7 @@ pub async fn update_note(
     Ok(HttpResponse::Ok().json(res))
 }
 
-#[delete("/api/notes/{id}")]
-pub async fn delete_note(state: Data<AppState>, path: Path<i32>) -> AppResult<HttpResponse> {
+pub(crate) async fn delete_note(state: Data<AppState>, path: Path<i32>) -> AppResult<HttpResponse> {
     let db: Addr<DbActor> = state.as_ref().db.clone();
     let note_id: i32 = path.into_inner();
 

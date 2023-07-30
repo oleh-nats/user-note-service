@@ -6,7 +6,6 @@ use crate::{
 };
 use actix::Addr;
 use actix_web::{
-    post,
     web::{Data, Json},
     HttpResponse,
 };
@@ -18,17 +17,19 @@ use serde::Deserialize;
 use sha2::Sha256;
 
 #[derive(Deserialize)]
-struct CreateUserBody {
+pub(crate) struct CreateUserBody {
     username: String,
     password: String,
 }
 
-#[post("/api/register")]
-async fn create_user(state: Data<AppState>, body: Json<CreateUserBody>) -> AppResult<HttpResponse> {
+pub(crate) async fn create_user(
+    state: Data<AppState>,
+    body: Json<CreateUserBody>,
+) -> AppResult<HttpResponse> {
     let db: Addr<DbActor> = state.as_ref().db.clone();
 
     let user: CreateUserBody = body.into_inner();
-    let hash_secret = std::env::var("HASH_SECRET").expect("HASH_SECRET must be set!");
+    let hash_secret = state.hash_secret.clone();
     let mut hasher = Hasher::default();
     let hash = hasher
         .with_password(user.password)
@@ -45,8 +46,10 @@ async fn create_user(state: Data<AppState>, body: Json<CreateUserBody>) -> AppRe
     Ok(HttpResponse::Ok().json(res))
 }
 
-#[post("/api/login")]
-async fn basic_auth(state: Data<AppState>, credentials: BasicAuth) -> AppResult<HttpResponse> {
+pub(crate) async fn basic_auth(
+    state: Data<AppState>,
+    credentials: BasicAuth,
+) -> AppResult<HttpResponse> {
     let jwt_secret: Hmac<Sha256> = Hmac::new_from_slice(
         std::env::var("JWT_SECRET")
             .expect("JWT_SECRET must be set!")

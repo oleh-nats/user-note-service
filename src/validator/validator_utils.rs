@@ -19,8 +19,8 @@ pub struct TokenClaims {
 pub async fn handle_validate(
     req: ServiceRequest,
     credentials: BearerAuth,
+    jwt_secret: &str,
 ) -> anyhow::Result<ServiceRequest, (Error, ServiceRequest)> {
-    let jwt_secret: String = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set!");
     let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
     let token_string = credentials.token();
 

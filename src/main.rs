@@ -1,52 +1,50 @@
+use crate::config::CommandLine;
 use actix::SyncArbiter;
 use actix_web::{
     web::{self, Data},
     App, HttpServer,
 };
 use actix_web_httpauth::middleware::HttpAuthentication;
+use clap::Parser;
 use diesel::{
     r2d2::{ConnectionManager, Pool},
     PgConnection,
 };
-use dotenv::dotenv;
-use std::env;
 
+mod config;
 mod db;
 mod error;
-mod login;
-mod note;
+mod routes;
 mod validator;
 
 use db::utils::{get_pool, AppState, DbActor};
-use login::services::{basic_auth, create_user};
-use note::services::{create_note, delete_note, fetch_notes, update_note};
 use validator::validator_utils::handle_validate;
 
 #[actix_web::main]
 async fn main() -> anyhow::Result<()> {
-    dotenv().ok();
-    let db_url: String = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool: Pool<ConnectionManager<PgConnection>> = get_pool(&db_url)?;
+    let cmd: CommandLine = CommandLine::parse();
+    let properties = cmd.load_configurations()?;
+
+    let pool: Pool<ConnectionManager<PgConnection>> = get_pool(properties.postgres.database_url)?;
     let db_addr = SyncArbiter::start(5, move || DbActor(pool.clone()));
 
     HttpServer::new(move || {
-        let bearer_middleware = HttpAuthentication::bearer(handle_validate);
+        let bearer_middleware = HttpAuthentication::bearer(move |req, credentials| {
+            handle_validate(req, credentials, properties.jwt_secret)
+        });
         App::new()
             .app_data(Data::new(AppState {
                 db: db_addr.clone(),
+                hash_secret: properties.hash_secret.to_owned(),
             }))
-            .service(create_user)
-            .service(basic_auth)
+            .configure(routes::auth_config)
             .service(
                 web::scope("")
                     .wrap(bearer_middleware)
-                    .service(create_note)
-                    .service(fetch_notes)
-                    .service(update_note)
-                    .service(delete_note),
+                    .configure(routes::config),
             )
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(properties.web.bind)?
     .run()
     .await?;
 

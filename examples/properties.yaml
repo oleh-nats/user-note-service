@@ -1,0 +1,6 @@
+web:
+  bind: "127.0.0.1:8080"
+postgres:
+  database_url: "postgres://postgres:1@localhost/postgres"
+jwt_secret: "supersecretjwt"
+hash_secret: "supersecrethash"
